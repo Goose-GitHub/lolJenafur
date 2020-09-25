@@ -1,0 +1,138 @@
+#I still have so much to do--I can't freakin' believe how fast the time flew by! This puzzle is supposed to be based on the actual puzzle used in
+#World of Warcraft via the 'Jenafur' cat puzzle. It's really complicated to explain if you don't play WoW, so here's the link to the actual puzzle and solution
+#if you want to know where I got my inspiration from. https://www.wowhead.com/guides/jenafur-secret-cat-battle-pet
+#Anyways, in this game, I want the player to find the note which details a missing cat. The note will talk about the cat wanting certain foods and how the cat
+#enjoys music. The player will be able to access the opera hall when they have the correct foods in their inventory. Once inside, the opera hall contains a
+#10 by 10 square tile grid floor pattern. The player will then have to guess what foods go where to activate the cat event. I even wanted to throw in some
+#sounds as an added bonus. WORK IN PROGRESS XD
+
+def showInstructions():
+  #print a main menu and the commands
+  print('''
+Find Jenafur!
+========
+Commands:
+  go [direction]
+  get [item]
+  place [item]
+''')
+
+def showStatus():
+  #print the player's current status
+  print('---------------------------')
+  print('You are in the ' + currentRoom)
+  #print the current inventory
+  print('Inventory : ' + str(inventory))
+  #print an item if there is one
+  if "item" in rooms[currentRoom]:
+    print('You see a ' + rooms[currentRoom]['item'])
+  print("---------------------------")
+
+#an inventory, which is initially empty
+inventory = []
+
+#a dictionary linking a room to other rooms
+## A dictionary linking a room to other rooms
+rooms = {
+
+            'Hall' : {
+                  'south' : 'Kitchen',
+                  'west'  : 'Opera Hall',
+                  'east'  : 'Dining Room',
+                  'item'  : 'Hastily-Written Note',
+                  'item'  : 'Juicy Drumstick',
+                  'item'  : 'Baguette',
+                  'item'  : 'Fishy Bits',
+                },
+
+            'Kitchen' : {
+                  'north' : 'Hall',
+                  'item'  : 'Marbled Steak',
+                  'item'  : 'Juicy Drumstick',
+                  'item'  : 'Orange Orange',
+                  'item'  : 'Ghostly Pale Ale',
+                  'item'  : 'Fishy Bits',
+                  'item'  : 'Cross Bun',
+                  'item'  : 'Slathered Rib',
+                },
+            'Dining Room' : {
+                  'west' : 'Hall',
+                  'south': 'Garden',
+                  'item' : 'Strongarm Stout',
+                  'item' : 'Meaty Morsel',
+                  'item' : 'Dusty Bun',
+                  'item' : 'Marbled Steak',
+                  'north' : 'Pantry',
+               },
+            'Garden' : {
+                  'north' : 'Dining Room',
+                  'item'  : 'Yeasty Hunk',
+                  'item'  : 'Bunch of Berries',
+                  'item'  : 'Hidden Banana',
+               },
+            'Pantry' : {
+                  'south' : 'Dining Room',
+                  'item' : 'Lost Watermelon',
+                  'item' : 'Hoppy Mead',
+                  'item' : 'Old Apple',
+               },
+            'Opera Hall' : {
+                  'east' : 'Hall',
+                  'item' : '10 by 10 square tile floor pattern',
+               },
+         }
+
+#start the player in the Hall
+currentRoom = 'Hall'
+
+showInstructions()
+
+#loop forever
+while True:
+
+  showStatus()
+
+  #get the player's next 'move'
+  #.split() breaks it up into an list array
+  #eg typing 'go east' would give the list:
+  #['go','east']
+  move = ''
+  while move == '':
+    move = input('>')
+
+  # split allows an items to have a space on them
+  # get golden key is returned ["get", "golden key"]          
+  move = move.lower().split(" ", 1)
+
+  #if they type 'go' first
+  if move[0] == 'go':
+    #check that they are allowed wherever they want to go
+    if move[1] in rooms[currentRoom]:
+      #set the current room to the new room
+      currentRoom = rooms[currentRoom][move[1]]
+    #there is no door (link) to the new room
+    else:
+        print('You can\'t go that way!')
+        
+  ## Player cannot access the opera hall initially
+  if inventory != 'Juicy Drumstick' and 'Juicy Drumstick' and 'Marbled Steak' and 'Marbled Steak' and 'Fishy Bits' and 'Fishy Bits' and 'Slathered Rib' and 'Meaty Morsel' and 'Slathered Rib':
+        print("It looks like the door to the opera hall won't budge."),
+        
+  ## Define how a player can unlock the opera hall
+  if currentRoom == 'Juicy Drumstick' and 'Juicy Drumstick' and 'Marbled Steak' and 'Marbled Steak' and 'Fishy Bits' and 'Fishy Bits' and 'Slathered Rib' and 'Meaty Morsel' and 'Slathered Rib' in inventory:
+    print('You hear a loud click noise as if something was unlocked, then you hear a curious meowing sound in the distance.')
+
+  #if they type 'get' first
+  if move[0] == 'get' :
+    #if the room contains an item, and the item is the one they want to get
+    if "item" in rooms[currentRoom] and move[1] in rooms[currentRoom]['item']:
+      #add the item to their inventory
+      inventory += [move[1]]
+      #display a helpful message
+      print(move[1] + ' got!')
+      #delete the item from the room
+      del rooms[currentRoom]['item']
+    #otherwise, if the item isn't there to get
+    else:
+      #tell them they can't get it
+      print('Can\'t get ' + move[1] + '!')
